@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import GridEditor from "./grid-editor";
+import { ExtensionContextProvider } from "./extension-context";
+import Grid from "./grid";
+import Pagination from "./pagination";
+import Title from "./title";
+import React from "react";
 
 function App() {
+  let [pageNum, setPageNum] = useState(0);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ExtensionContextProvider>
+        <Title></Title>
+        <div className="app">
+          <div className="app-grid">
+            <Grid pageNum={pageNum} onPageChange={setPageNum}></Grid>
+            <Pagination pageNum={pageNum} onChange={setPageNum} />
+          </div>
+          <GridEditor></GridEditor>
+        </div>
+      </ExtensionContextProvider>
+    </>
   );
 }
 
