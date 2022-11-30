@@ -8,9 +8,12 @@ This extension allows users to place and resize grid items using a WYSIWYG edito
 
 ## Parameters
 
-- `rows`: The number of rows on the grid. (default: 3)
+Parameters can go on instance or installation, with priority going to instance.
+
+- `cols`: The number of columns on the grid. (default: 3)
 - `pageSize`: The number of items on a page. (default: 24)
 - `paginated`: Whether the grid is paginated or not. (default: true)
+- `pageCount`: The number of pages content can be placed on. (default: 100)
 - `mode`: The type of positioning that the grid items use. (default: absolute)
   - `absolute`: Position indices are always equivalent to the same position on the grid: `pageBase + (y * rows) + x`. Useful for layouts with only grid content, or for implementing custom wrapping logic.
   - `wrap`: Grid items consume `rows*cols` spaces directly after their position, and positions for surrounding spaces flow from left to right, up to down. Useful for placing items that need other content to wrap around them.
