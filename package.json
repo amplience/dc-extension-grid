@@ -1,5 +1,5 @@
 {
-  "name": "dc-extension-grid-content",
+  "name": "dc-extension-grid",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
