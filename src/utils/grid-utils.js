@@ -51,6 +51,7 @@ export function wrapPositionUpdate(
   gridPos,
   size,
   pageBase,
+  pageSize,
   items,
   cols,
   mode = "absolute"
@@ -63,7 +64,7 @@ export function wrapPositionUpdate(
       break;
     }
     case "wrap": {
-      items = items.filter((i) => i.position >= pageBase);
+      items = items.filter((i) => i == item || (i.position >= pageBase && i.position < pageBase + pageSize));
 
       const itemWithPos = items.map((i) => ({
         item: i,

@@ -106,6 +106,7 @@ export function ExtensionContextProvider({ children }) {
           [x, y],
           [1, 1],
           pageBase,
+          state.params.pageSize,
           state.field,
           cols,
           state.params.mode
@@ -123,7 +124,8 @@ export function ExtensionContextProvider({ children }) {
             item,
             [-1, 0],
             [1, 1],
-            0,
+            Math.floor(item.position / state.params.pageSize),
+            state.params.pageSize,
             state.field,
             3,
             state.params.mode

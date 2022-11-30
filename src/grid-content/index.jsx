@@ -133,12 +133,12 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
       const valid = isGridPosValid([x, y], [icols, rows], pageBase + pageOffset, pageSize, items, item, cols, params.mode);
 
       if (valid) {
-        if (item.position < pageBase + pageOffset) {
-          wrapPositionUpdate(item, [-1, 0], [icols, rows], pageBase, items, cols, params.mode);
+        if (pageOffset != 0) {
+          wrapPositionUpdate(item, [-1, 0], [icols, rows], pageBase, pageSize, items, cols, params.mode);
           item.position = Infinity;
         }
 
-        wrapPositionUpdate(item, [x, y], [icols, rows], pageBase + pageOffset, items, cols, params.mode);
+        wrapPositionUpdate(item, [x, y], [icols, rows], pageBase + pageOffset, pageSize, items, cols, params.mode);
         item.rows = String(rows);
         item.cols = String(icols);
         setField();

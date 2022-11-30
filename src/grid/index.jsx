@@ -22,7 +22,6 @@ export default function Grid({
   const pageBase = pageNum * pageSize;
 
   const createItemCallback = (x, y) => {
-    debugger
     createItem(x, y, pageBase, cols);
   };
 
