@@ -15,7 +15,7 @@ Parameters can go on instance or installation, with priority going to instance.
 - `paginated`: Whether the grid is paginated or not. (default: true)
 - `pageCount`: The number of pages content can be placed on. (default: 100)
 - `mode`: The type of positioning that the grid items use. (default: absolute)
-  - `absolute`: Position indices are always equivalent to the same position on the grid: `pageBase + (y * rows) + x`. Useful for layouts with only grid content, or for implementing custom wrapping logic.
+  - `absolute`: Position indices are always equivalent to the same position on the grid: `pageBase + (y * cols) + x`. Useful for layouts with only grid content, or for implementing custom wrapping logic.
   - `wrap`: Grid items consume `rows*cols` spaces directly after their position, and positions for surrounding spaces flow from left to right, up to down. Useful for placing items that need other content to wrap around them.
 - `contentTypes`: Content type information for the editor to display links and references. A list of objects with the following properties:
   - `id`: The schema ID of the content type.
