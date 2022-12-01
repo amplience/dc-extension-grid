@@ -51,6 +51,10 @@ export function ExtensionContextProvider({ children }) {
       };
       const contentTypes = mapContentTypes(params.contentTypes);
 
+      if (params.mode === 'wrap-simple') {
+        params.paginated = false;
+      }
+
       schema["ui:extension"].params.contentTypes = contentTypes;
 
       // Remove properties managed by grid placement

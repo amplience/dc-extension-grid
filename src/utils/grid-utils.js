@@ -63,8 +63,10 @@ export function wrapPositionUpdate(
       item.position = pageBase + x + y * cols;
       break;
     }
-    case "wrap": {
-      items = items.filter((i) => i == item || (i.position >= pageBase && i.position < pageBase + pageSize));
+    case "wrap":
+    case "wrap-simple": {
+      const simple = mode === 'wrap-simple';
+      items = items.filter((i) => i === item || (i.position >= pageBase && i.position < pageBase + pageSize));
 
       const itemWithPos = items.map((i) => ({
         item: i,
@@ -93,7 +95,7 @@ export function wrapPositionUpdate(
                 const oRows =
                   item === other.item ? size[1] : Number(other.item.rows);
 
-                position += oCols * oRows - 1;
+                position += simple ? 0 : oCols * oRows - 1;
 
                 for (let col = 0; col < oCols; col++) {
                   for (let row = 0; row < oRows; row++) {
@@ -123,8 +125,11 @@ export function getPosition(item, pageBase, items, cols, mode = "absolute") {
       const y = Math.floor(gridIndex / cols);
       return [x, y];
     }
-    case "wrap": {
-      const maxValue = Math.ceil(gridIndex / cols) + 1;
+    case "wrap":
+    case "wrap-simple": {
+      const simple = mode === 'wrap-simple';
+
+      const maxValue = simple ? Infinity : Math.ceil(gridIndex / cols) + 1;
       const occupied = new Set();
       let position = 0;
 
@@ -149,7 +154,7 @@ export function getPosition(item, pageBase, items, cols, mode = "absolute") {
                   const oCols = Number(other.cols);
                   const oRows = Number(other.rows);
 
-                  position += oCols * oRows - 1;
+                  position += simple ? 0 : oCols * oRows - 1;
 
                   for (let col = 0; col < oCols; col++) {
                     for (let row = 0; row < oRows; row++) {

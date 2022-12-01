@@ -133,7 +133,7 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
       const valid = isGridPosValid([x, y], [icols, rows], pageBase + pageOffset, pageSize, items, item, cols, params.mode);
 
       if (valid) {
-        if (pageOffset != 0) {
+        if (pageOffset !== 0) {
           wrapPositionUpdate(item, [-1, 0], [icols, rows], pageBase, pageSize, items, cols, params.mode);
           item.position = Infinity;
         }

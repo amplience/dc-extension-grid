@@ -17,6 +17,7 @@ Parameters can go on instance or installation, with priority going to instance.
 - `mode`: The type of positioning that the grid items use. (default: absolute)
   - `absolute`: Position indices are always equivalent to the same position on the grid: `pageBase + (y * cols) + x`. Useful for layouts with only grid content, or for implementing custom wrapping logic.
   - `wrap`: Grid items consume `rows*cols` spaces directly after their position, and positions for surrounding spaces flow from left to right, up to down. Useful for placing items that need other content to wrap around them.
+  - `wrap-simple`: Similar to wrap in that positions wrap around large grid items, but each grid item only takes up one position slot. Does not work with pagination.
 - `contentTypes`: Content type information for the editor to display links and references. A list of objects with the following properties:
   - `id`: The schema ID of the content type.
   - `icon`: The URL of an icon to use for displaying the content type.
