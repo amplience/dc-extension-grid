@@ -13,6 +13,7 @@ export function isGridPosValid(
   items,
   item,
   cols,
+  select,
   mode
 ) {
   const [x, y] = gridPos;
@@ -27,11 +28,11 @@ export function isGridPosValid(
   // Check collision with other items
 
   for (let other of items) {
-    if (other !== item && other.position >= pageBase) {
-      const [ox, oy] = getPosition(other, pageBase, items, cols, mode);
+    if (other !== item && select(other, 'position') >= pageBase) {
+      const [ox, oy] = getPosition(other, pageBase, items, cols, select, mode);
 
-      const oex = ox + Number(other.cols);
-      const oey = oy + Number(other.rows);
+      const oex = ox + Number(select(other, 'cols'));
+      const oey = oy + Number(select(other, 'rows'));
 
       if (!(x >= oex || y >= oey || ex <= ox || ey <= oy)) {
         return false;
@@ -40,6 +41,59 @@ export function isGridPosValid(
   }
 
   return true;
+}
+
+export function findClosestUnreservedPosition(
+  position,
+  items,
+  cols,
+  select,
+  mode
+) {
+  const reserved = new Set();
+
+  for (const item of items) {
+    const icols = Number(select(item, 'cols'));
+    const rows = Number(select(item, 'rows'));
+
+    switch (mode) {
+      case "absolute": {
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            reserved.add(position + x + y * cols);
+          }
+        }
+        break;
+      }
+      case "wrap":
+      case "wrap-simple": {
+        const size = icols * rows;
+        const position = select(item, 'position');
+    
+        for (let i = 0; i < size; i++) {
+          reserved.add(position + i);
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  let offset = 0;
+  while (true) {
+    if (!reserved.has(position + offset)) {
+      return position + offset;
+    }
+
+    if (position - offset >= 0) {
+      if (!reserved.has(position - offset)) {
+        return position - offset;
+      }
+    }
+
+    offset++;
+  }
 }
 
 // Item flow can vary depending on wrap mode:
@@ -54,23 +108,25 @@ export function wrapPositionUpdate(
   pageSize,
   items,
   cols,
+  select,
+  set,
   mode = "absolute"
 ) {
   const [x, y] = gridPos;
 
   switch (mode) {
     case "absolute": {
-      item.position = pageBase + x + y * cols;
+      set(item, 'position', pageBase + x + y * cols);
       break;
     }
     case "wrap":
     case "wrap-simple": {
       const simple = mode === 'wrap-simple';
-      items = items.filter((i) => i === item || (i.position >= pageBase && i.position < pageBase + pageSize));
+      items = items.filter((i) => i === item || (select(i, 'position') >= pageBase && select(i, 'position') < pageBase + pageSize));
 
       const itemWithPos = items.map((i) => ({
         item: i,
-        pos: i === item ? gridPos : getPosition(i, pageBase, items, cols, mode),
+        pos: i === item ? gridPos : getPosition(i, pageBase, items, cols, select, mode),
       }));
 
       itemWithPos.sort((a, b) => a.pos[0] - b.pos[0]);
@@ -87,13 +143,13 @@ export function wrapPositionUpdate(
           if (!occupied.has(absId)) {
             for (let other of itemWithPos) {
               if (other.pos[0] === xi && other.pos[1] === yi) {
-                other.item.position = position + pageBase;
+                set(other.item, 'position', position + pageBase);
 
                 // Reserve spots for this item
                 const oCols =
-                  item === other.item ? size[0] : Number(other.item.cols);
+                  item === other.item ? size[0] : Number(select(other.item, 'cols'));
                 const oRows =
-                  item === other.item ? size[1] : Number(other.item.rows);
+                  item === other.item ? size[1] : Number(select(other.item, 'rows'));
 
                 position += simple ? 0 : oCols * oRows - 1;
 
@@ -116,8 +172,8 @@ export function wrapPositionUpdate(
   }
 }
 
-export function getPosition(item, pageBase, items, cols, mode = "absolute") {
-  const gridIndex = item.position - pageBase;
+export function getPosition(item, pageBase, items, cols, select, mode = "absolute") {
+  const gridIndex = select(item, 'position') - pageBase;
 
   switch (mode) {
     case "absolute": {
@@ -131,28 +187,30 @@ export function getPosition(item, pageBase, items, cols, mode = "absolute") {
 
       const maxValue = simple ? Infinity : Math.ceil(gridIndex / cols) + 1;
       const occupied = new Set();
+      const itemPosition = select(item, 'position');
       let position = 0;
 
       for (let yi = 0; yi <= maxValue; yi++) {
         for (let xi = 0; xi < cols; xi++) {
           const absId = xi + yi * cols;
           if (!occupied.has(absId)) {
-            if (item.position - pageBase === position) {
+            if (itemPosition - pageBase === position) {
               return [xi, yi];
             }
 
             for (let other of items) {
+              const otherPosition = select(other, 'position');
               if (
                 item !== other &&
-                other.position >= pageBase &&
-                item.position > other.position
+                otherPosition >= pageBase &&
+                itemPosition > otherPosition
               ) {
                 // Does the other item overlap this tile?
 
-                if (position === other.position - pageBase) {
+                if (position === (select(other, 'position') - pageBase)) {
                   // Reserve spots for this item
-                  const oCols = Number(other.cols);
-                  const oRows = Number(other.rows);
+                  const oCols = Number(select(other, 'cols'));
+                  const oRows = Number(select(other, 'rows'));
 
                   position += simple ? 0 : oCols * oRows - 1;
 

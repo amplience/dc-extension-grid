@@ -4,8 +4,8 @@ import { useExtension } from "../extension-context";
 
 export default function Pagination({ pageNum, onChange }) {
   let {
+    cols,
     params: {
-      cols,
       paginated,
       pageCount
     }

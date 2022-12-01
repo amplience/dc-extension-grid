@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { wrapPositionUpdate } from "../utils/grid-utils";
+import { findClosestUnreservedPosition, wrapPositionUpdate } from "../utils/grid-utils";
 import { getSdk } from "./extension-sdk";
 
 const defaultParams = {
@@ -10,9 +10,37 @@ const defaultParams = {
   pageCount: 100
 };
 
+const defaultSelector = (obj, field) => {
+  return obj[field];
+}
+
+const defaultSetter = (obj, field, value) => {
+  obj[field] = value;
+}
+
+const indexedSelector = (index) => (obj, field) => {
+  return Array.isArray(obj[field]) ? obj[field][index] : obj[field];
+}
+
+const indexedSetter = (index, count) => (obj, field, value) => {
+  if (!Array.isArray(obj[field])) {
+    const originalValue = obj[field];
+    obj[field] = [];
+
+    for (let i = 0; i < count; i++) {
+      obj[field][i] = originalValue;
+    }
+  }
+
+  obj[field][index] = value;
+}
+
 const defaultExtensionState = {
   selectedIndex: -1,
   setSelectedIndex: null,
+  cols: 3,
+  select: defaultSelector,
+  set: defaultSetter,
   params: {
     ...defaultParams,
   },
@@ -77,6 +105,14 @@ export function ExtensionContextProvider({ children }) {
         contentTypes: mapContentTypes(params.contentTypes),
       };
 
+      if (Array.isArray(params.cols)) {
+        state.cols = params.cols[params.cols.length - 1];
+        state.select = indexedSelector(params.cols.length - 1);
+        state.set = indexedSetter(params.cols.length - 1, params.cols.length);
+      } else {
+        state.cols = params.cols;
+      }
+
       state.setSelectedIndex = (index) => {
         state.selectedIndex = index;
 
@@ -87,7 +123,9 @@ export function ExtensionContextProvider({ children }) {
       state.setField = () => {
         const selectedItem = state.field[state.selectedIndex];
 
-        state.field.sort((a, b) => a.position - b.position);
+        const select = state.select;
+
+        state.field.sort((a, b) => select(a, 'position') - select(b, 'position'));
 
         if (selectedItem) {
           state.setSelectedIndex(state.field.indexOf(selectedItem));
@@ -113,8 +151,26 @@ export function ExtensionContextProvider({ children }) {
           state.params.pageSize,
           state.field,
           cols,
+          state.select,
+          state.set,
           state.params.mode
         );
+
+        if (Array.isArray(state.params.cols)) {
+          // Set a position for the other column modes that is close to the target, but isn't taken.
+          newItem.rows = [];
+          newItem.cols = [];
+
+          const currentIndex = state.params.cols.indexOf(state.cols);
+          for (let i = 0; i < state.params.cols.length; i++) {
+            newItem.rows[i] = "1";
+            newItem.cols[i] = "1";
+
+            if (i !== currentIndex) {
+              newItem.position[i] = findClosestUnreservedPosition(newItem.position[currentIndex], state.field, cols, indexedSelector(i), state.params.mode)
+            }
+          }
+        }
 
         state.setField();
 
@@ -124,16 +180,38 @@ export function ExtensionContextProvider({ children }) {
       state.deleteSelectedItem = () => {
         if (state.selectedIndex >= 0) {
           const item = state.field[state.selectedIndex];
-          wrapPositionUpdate(
-            item,
-            [-1, 0],
-            [1, 1],
-            Math.floor(item.position / state.params.pageSize),
-            state.params.pageSize,
-            state.field,
-            3,
-            state.params.mode
-          );
+
+          if (Array.isArray(state.params.cols)) {
+            for (let i = 0; i < state.params.cols.length; i++) {
+              const select = indexedSelector(i);
+              const set = indexedSetter(i, state.params.cols.length)
+              wrapPositionUpdate(
+                item,
+                [-1, 0],
+                [1, 1],
+                Math.floor(select(item, 'position') / state.params.pageSize),
+                state.params.pageSize,
+                state.field,
+                state.params.cols[i],
+                select,
+                set,
+                state.params.mode
+              );
+            }
+          } else {
+            wrapPositionUpdate(
+              item,
+              [-1, 0],
+              [1, 1],
+              Math.floor(state.select(item, 'position') / state.params.pageSize),
+              state.params.pageSize,
+              state.field,
+              state.cols,
+              state.select,
+              state.set,
+              state.params.mode
+            );
+          }
           state.field.splice(state.selectedIndex, 1);
           state.setSelectedIndex(-1);
           state.setField();
@@ -146,6 +224,17 @@ export function ExtensionContextProvider({ children }) {
         state = { ...state };
         setState(state);
       };
+
+      state.setColVariant = (num) => {
+        state.cols = state.params.cols[num];
+
+        state.select = indexedSelector(num);
+        state.set = indexedSetter(num, params.cols.length);
+        state.field.sort((a, b) => state.select(a, 'position') - state.select(b, 'position'));
+
+        state = { ...state };
+        setState(state);
+      }
 
       setState({ ...state });
     });

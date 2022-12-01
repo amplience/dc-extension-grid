@@ -13,7 +13,9 @@ export default function Grid({
     field: items,
     createItem,
     dragState,
-    params: { cols, pageSize, pageCount },
+    cols,
+    select,
+    params: { pageSize, pageCount },
   } = useExtension();
 
   const width = cols * 60 + (cols - 1) * 6 + "px";
@@ -40,8 +42,10 @@ export default function Grid({
   const pageItems = (items ?? [])
     .map((item, index) => ({ item, index }))
     .filter(
-      ({ item }) =>
-        item.position >= pageBase && item.position < pageBase + pageSize
+      ({ item }) => {
+        const pos = select(item, 'position');
+        return pos >= pageBase && pos < pageBase + pageSize;
+      }
     );
 
   if (
@@ -60,7 +64,7 @@ export default function Grid({
       cols={cols}
       pageBase={pageBase}
       pageSize={pageSize}
-      key={`s${index}-${item.position}`}
+      key={`s${index}-${select(item, 'position')}`}
       onPageChange={onPageChange}
     ></GridContent>
   ));

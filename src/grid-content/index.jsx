@@ -16,24 +16,25 @@ const ResizeMode = {
 };
 
 export default function GridContent({ items, index, pageBase, pageSize, cols, onPageChange }) {
-  const { selectedIndex, setSelectedIndex, setField, params, dragState, setDragState } = useExtension();
+  const { selectedIndex, setSelectedIndex, setField, params, dragState, setDragState, select, set } = useExtension();
 
   const item = items[index];
+  const pos = select(item, 'position');
 
   let pageOffset = 0;
 
-  if (item.position < pageBase || item.position >= pageBase + pageSize) {
+  if (pos < pageBase || pos >= pageBase + pageSize) {
     pageOffset = pageBase;
-    pageBase = Math.floor(item.position / pageSize) * pageSize;
+    pageBase = Math.floor(pos / pageSize) * pageSize;
     pageOffset = pageOffset - pageBase;
   }
 
-  const [x, y] = getPosition(item, pageBase, items, cols, params.mode);
+  const [x, y] = getPosition(item, pageBase, items, cols, select, params.mode);
 
   const gridColumnStart = x + 1;
   const gridRowStart = y + 1;
-  const gridColumnEnd = gridColumnStart + Number(item.cols);
-  const gridRowEnd = gridRowStart + Number(item.rows);
+  const gridColumnEnd = gridColumnStart + Number(select(item, 'cols'));
+  const gridRowEnd = gridRowStart + Number(select(item, 'rows'));
 
   let [resizeMode, setResizeMode] = useState(ResizeMode.None);
   const [rect, setRect] = useState(undefined);
@@ -41,7 +42,7 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
   const [dragPos, setDragPos] = useState([0, 0]);
   const [pageSwitchState] = useState({});
 
-  const select = useCallback(() => {
+  const selectIndex = useCallback(() => {
     setSelectedIndex(index);
   }, [index, setSelectedIndex]);
 
@@ -62,7 +63,7 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
         setResizeMode(ResizeMode.Bottom);
         break;
       case "drag":
-        select();
+        selectIndex();
         setDragPos([evt.pageX, evt.pageY]);
         setResizeMode(ResizeMode.Drag);
         setDragState({item, page: pageBase/pageSize, index});
@@ -86,9 +87,9 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
         Math.round((mousePos[1] - rect.top) / 66),
       ];
 
-      let [x, y] = getPosition(item, pageBase, items, cols, params.mode);
-      let rows = Number(item.rows);
-      let icols = Number(item.cols);
+      let [x, y] = getPosition(item, pageBase, items, cols, select, params.mode);
+      let rows = Number(select(item, 'rows'));
+      let icols = Number(select(item, 'cols'));
 
       switch (resizeMode) {
         case ResizeMode.Left:
@@ -130,17 +131,17 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
           break;
       }
 
-      const valid = isGridPosValid([x, y], [icols, rows], pageBase + pageOffset, pageSize, items, item, cols, params.mode);
+      const valid = isGridPosValid([x, y], [icols, rows], pageBase + pageOffset, pageSize, items, item, cols, select, params.mode);
 
       if (valid) {
         if (pageOffset !== 0) {
-          wrapPositionUpdate(item, [-1, 0], [icols, rows], pageBase, pageSize, items, cols, params.mode);
-          item.position = Infinity;
+          wrapPositionUpdate(item, [-1, 0], [icols, rows], pageBase, pageSize, items, cols, select, set, params.mode);
+          set(item, 'position', Infinity);
         }
 
-        wrapPositionUpdate(item, [x, y], [icols, rows], pageBase + pageOffset, pageSize, items, cols, params.mode);
-        item.rows = String(rows);
-        item.cols = String(icols);
+        wrapPositionUpdate(item, [x, y], [icols, rows], pageBase + pageOffset, pageSize, items, cols, select, set, params.mode);
+        set(item, 'rows', String(rows));
+        set(item, 'cols', String(icols));
         setField();
       }
 
@@ -202,7 +203,7 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
           mousePos[1] - dragPos[1]
         }px)`;
         const newPos = calculateGridPos(x, y, mousePos, dragPos);
-        const valid = isGridPosValid(newPos, [Number(item.cols), Number(item.rows)], pageBase + pageOffset, pageSize, items, item, cols, params.mode);
+        const valid = isGridPosValid(newPos, [Number(select(item, 'cols')), Number(select(item, 'rows'))], pageBase + pageOffset, pageSize, items, item, cols, select, params.mode);
 
         filter = valid ? "grayscale(0%)" : "grayscale(100%)";
 

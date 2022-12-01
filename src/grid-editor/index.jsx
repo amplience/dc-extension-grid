@@ -18,6 +18,7 @@ export default function GridEditor() {
     itemSchema,
     sdk,
     setField,
+    select,
     deleteSelectedItem,
   } = useExtension();
 
@@ -43,7 +44,7 @@ export default function GridEditor() {
         <SdkContext.Provider value={{ sdk }}>
           {withTheme(
             <Editor
-              key={`${selectedIndex}-${selected.position}`}
+              key={`${selectedIndex}-${select(selected, 'position')}`}
               schema={itemSchema}
               value={selected}
               registry={registry}
