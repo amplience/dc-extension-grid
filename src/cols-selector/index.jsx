@@ -27,12 +27,8 @@ export default function ColsSelector() {
     );
   }
 
-  const style = {
-    width: cols * 60 + 6 * (cols - 1) + "px",
-  };
-
   return (
-    <div className="cols-selector" style={style}>
+    <div className="cols-selector">
       Columns: {columnButtons}
     </div>
   );

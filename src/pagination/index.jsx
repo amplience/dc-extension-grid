@@ -47,7 +47,7 @@ export default function Pagination({ pageNum, onChange }) {
   }
 
   const style = {
-    width: cols * 60 + 6 * (cols - 1) + "px",
+    minWidth: cols * 60 + 6 * (cols - 1) + "px",
   };
 
   return (
