@@ -25,6 +25,105 @@ Parameters can go on instance or installation, with priority going to instance.
 
 If you want to get started after cloning this repo, remember to sync packages with `npm i`.
 
+## Multiple Column Layouts
+
+It's possible to use more than one number of columns for a single grid layout, and have different positioning for each number of columns. This is useful for creating grid layouts for desktop, tablet and mobile at the same time.
+
+First, provide `cols` in the extension parameters with an array of column numbers you want to create layouts for. Change all grid item properties to be an array of numbers (`rows`, `cols`, `position`). Each array item will represent the position and sizing of the item paired with the column number with the same array index. You should read these based on the number of columns you want on your render, so that you can use the unique layouts as the number of columns changes.
+
+Note that when multiple column layouts are used, the sorting order of grid items may be different between them. Make sure that your render is aware of this, and sorts based on the correct layout if necessary.
+
+## Example Snippets
+
+### Single column layout
+```json
+{
+    "title": "Grid Content",
+    "description": "Items to display in the grid",
+    "type": "array",
+    "minItems": 0,
+    "maxItems": 10,
+    "items": {
+        "type": "object",
+        "position": {
+            "title": "Grid Position",
+            "description": "Grid item placement. Should not be a duplicate or overlap.",
+            "type": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "cols": {
+            "title": "Column Span",
+            "description": "Width of the item in number of grid columns.",
+            "type": "number",
+            "minimum": 1,
+            "default": 1
+        },
+        "rows": {
+            "title": "Row Span",
+            "description": "Height of the item in number of grid rows.",
+            "type": "number",
+            "minimum": 1,
+            "default": 1
+        }
+        // Insert your item specific properties here.
+    },
+    "ui:extension": {
+        "name": "grid",
+        "params": {
+            "mode": "absolute",
+            "cols": 3
+        }
+    }
+}
+```
+
+### Multiple column layouts
+```json
+{
+    "title": "Grid Content",
+    "description": "Items to display in the grid",
+    "type": "array",
+    "minItems": 0,
+    "maxItems": 10,
+    "items": {
+        "type": "object",
+        "position": {
+            "title": "Grid Position",
+            "description": "Grid item placement. Should not be a duplicate or overlap.",
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
+        "cols": {
+            "title": "Column Span",
+            "description": "Width of the item in number of grid columns.",
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
+        "rows": {
+            "title": "Row Span",
+            "description": "Height of the item in number of grid rows.",
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        }
+        // Insert your item specific properties here.
+    },
+    "ui:extension": {
+        "name": "grid",
+        "params": {
+            "mode": "absolute",
+            "cols": 3
+        }
+    }
+}
+```
+
 ## How to install
 
 ### Register Extension
