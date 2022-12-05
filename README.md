@@ -118,7 +118,7 @@ Note that when multiple column layouts are used, the sorting order of grid items
         "name": "grid",
         "params": {
             "mode": "absolute",
-            "cols": 3
+            "cols": [1, 2, 3]
         }
     }
 }
