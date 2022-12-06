@@ -54,9 +54,12 @@ const mapContentTypes = (types) => {
     icons: {},
   };
 
-  for (let type of types) {
-    if (type.card) result.cards[type.id] = type.card;
-    if (type.icon) result.icons[type.id] = type.icon;
+
+  if (types != null) {
+    for (let type of types) {
+      if (type.card) result.cards[type.id] = type.card;
+      if (type.icon) result.icons[type.id] = type.icon;
+    }
   }
 
   return result;

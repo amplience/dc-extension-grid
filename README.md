@@ -45,28 +45,30 @@ Note that when multiple column layouts are used, the sorting order of grid items
     "maxItems": 10,
     "items": {
         "type": "object",
-        "position": {
-            "title": "Grid Position",
-            "description": "Grid item placement. Should not be a duplicate or overlap.",
-            "type": "number",
-            "minimum": 0,
-            "default": 0
-        },
-        "cols": {
-            "title": "Column Span",
-            "description": "Width of the item in number of grid columns.",
-            "type": "number",
-            "minimum": 1,
-            "default": 1
-        },
-        "rows": {
-            "title": "Row Span",
-            "description": "Height of the item in number of grid rows.",
-            "type": "number",
-            "minimum": 1,
-            "default": 1
+        "properties": {
+            "position": {
+                "title": "Grid Position",
+                "description": "Grid item placement. Should not be a duplicate or overlap.",
+                "type": "number",
+                "minimum": 0,
+                "default": 0
+            },
+            "cols": {
+                "title": "Column Span",
+                "description": "Width of the item in number of grid columns.",
+                "type": "number",
+                "minimum": 1,
+                "default": 1
+            },
+            "rows": {
+                "title": "Row Span",
+                "description": "Height of the item in number of grid rows.",
+                "type": "number",
+                "minimum": 1,
+                "default": 1
+            }
+            // Insert your item specific properties here.
         }
-        // Insert your item specific properties here.
     },
     "ui:extension": {
         "name": "grid",
@@ -88,31 +90,33 @@ Note that when multiple column layouts are used, the sorting order of grid items
     "maxItems": 10,
     "items": {
         "type": "object",
-        "position": {
-            "title": "Grid Position",
-            "description": "Grid item placement. Should not be a duplicate or overlap.",
-            "type": "array",
-            "items": {
-                "type": "number"
+        "properties": {
+            "position": {
+                "title": "Grid Position",
+                "description": "Grid item placement. Should not be a duplicate or overlap.",
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
+            },
+            "cols": {
+                "title": "Column Span",
+                "description": "Width of the item in number of grid columns.",
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
+            },
+            "rows": {
+                "title": "Row Span",
+                "description": "Height of the item in number of grid rows.",
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
             }
-        },
-        "cols": {
-            "title": "Column Span",
-            "description": "Width of the item in number of grid columns.",
-            "type": "array",
-            "items": {
-                "type": "number"
-            }
-        },
-        "rows": {
-            "title": "Row Span",
-            "description": "Height of the item in number of grid rows.",
-            "type": "array",
-            "items": {
-                "type": "number"
-            }
+            // Insert your item specific properties here.
         }
-        // Insert your item specific properties here.
     },
     "ui:extension": {
         "name": "grid",
