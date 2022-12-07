@@ -41,6 +41,7 @@ const defaultExtensionState = {
   cols: 3,
   select: defaultSelector,
   set: defaultSetter,
+  rowColCast: Number,
   params: {
     ...defaultParams,
   },
@@ -88,6 +89,8 @@ export function ExtensionContextProvider({ children }) {
 
       schema["ui:extension"].params.contentTypes = contentTypes;
 
+      const rowColCast = (itemSchema.properties.rows.items?.type ?? itemSchema.properties.rows.type) === 'string' ? String : Number
+
       // Remove properties managed by grid placement
       delete itemSchema.properties.rows;
       delete itemSchema.properties.cols;
@@ -106,6 +109,7 @@ export function ExtensionContextProvider({ children }) {
         sdk,
         params,
         contentTypes: mapContentTypes(params.contentTypes),
+        rowColCast
       };
 
       if (Array.isArray(params.cols)) {
@@ -140,8 +144,8 @@ export function ExtensionContextProvider({ children }) {
       state.createItem = (x, y, pageBase, cols) => {
         const newItem = {
           position: Infinity,
-          rows: "1",
-          cols: "1",
+          rows: rowColCast(1),
+          cols: rowColCast(1)
         };
 
         // Generate a position for the new item.
@@ -166,8 +170,8 @@ export function ExtensionContextProvider({ children }) {
 
           const currentIndex = state.params.cols.indexOf(state.cols);
           for (let i = 0; i < state.params.cols.length; i++) {
-            newItem.rows[i] = "1";
-            newItem.cols[i] = "1";
+            newItem.rows[i] = rowColCast(1);
+            newItem.cols[i] = rowColCast(1);
 
             if (i !== currentIndex) {
               newItem.position[i] = findClosestUnreservedPosition(newItem.position[currentIndex], state.field, cols, indexedSelector(i), state.params.mode)

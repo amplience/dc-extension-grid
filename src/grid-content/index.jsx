@@ -16,7 +16,7 @@ const ResizeMode = {
 };
 
 export default function GridContent({ items, index, pageBase, pageSize, cols, onPageChange }) {
-  const { selectedIndex, setSelectedIndex, setField, params, dragState, setDragState, select, set } = useExtension();
+  const { selectedIndex, setSelectedIndex, setField, params, dragState, setDragState, select, set, rowColCast } = useExtension();
 
   const item = items[index];
   const pos = select(item, 'position');
@@ -140,8 +140,8 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
         }
 
         wrapPositionUpdate(item, [x, y], [icols, rows], pageBase + pageOffset, pageSize, items, cols, select, set, params.mode);
-        set(item, 'rows', String(rows));
-        set(item, 'cols', String(icols));
+        set(item, 'rows', rowColCast(rows));
+        set(item, 'cols', rowColCast(icols));
         setField();
       }
 
