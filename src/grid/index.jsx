@@ -53,7 +53,6 @@ export default function Grid({
     dragState.item &&
     pageItems.findIndex(({ item }) => item === dragState.item) === -1
   ) {
-    console.log(dragState);
     pageItems.push({ item: dragState.item, index: dragState.index });
   }
 
