@@ -33,6 +33,8 @@ export default function GridEditor() {
     return <EmptyEditor />;
   }
 
+  console.log(itemSchema);
+
   const selected = field[selectedIndex];
 
   return (

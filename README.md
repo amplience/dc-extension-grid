@@ -91,12 +91,15 @@ Note that when multiple column layouts are used, the sorting order of grid items
     "items": {
         "type": "object",
         "properties": {
+            "type": "object",
             "position": {
                 "title": "Grid Position",
                 "description": "Grid item placement. Should not be a duplicate or overlap.",
                 "type": "array",
                 "items": {
-                    "type": "number"
+                    "type": "number",
+                    "minimum": 0,
+                    "default": 0
                 }
             },
             "cols": {
@@ -104,7 +107,9 @@ Note that when multiple column layouts are used, the sorting order of grid items
                 "description": "Width of the item in number of grid columns.",
                 "type": "array",
                 "items": {
-                    "type": "number"
+                    "type": "number",
+                    "minimum": 1,
+                    "default": 1
                 }
             },
             "rows": {
@@ -112,7 +117,9 @@ Note that when multiple column layouts are used, the sorting order of grid items
                 "description": "Height of the item in number of grid rows.",
                 "type": "array",
                 "items": {
-                    "type": "number"
+                    "type": "number",
+                    "minimum": 1,
+                    "default": 1
                 }
             }
             // Insert your item specific properties here.
