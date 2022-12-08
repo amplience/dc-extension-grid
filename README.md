@@ -182,7 +182,8 @@ In the project directory, you can run:
 ### `HTTPS=true npm start`
 
 Runs the app in the development mode.\
-Open [https://localhost:3000](https://localhost:3000) to view it in your browser.
+Open [https://localhost:3000](https://localhost:3000) to view it in your browser.\
+You can use this as the extension URL in DC to test local changes.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
