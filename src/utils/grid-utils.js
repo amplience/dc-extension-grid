@@ -88,7 +88,6 @@ export function findClosestUnreservedPosition(
   }
 
   let offset = 0;
-  debugger
   while (true) {
     if (!reserved.has(position + offset) && (position + offset < totalCount || position - offset < 0)) {
       if (position - offset < 0 && position > totalCount - position) {
