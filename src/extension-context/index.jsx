@@ -102,6 +102,11 @@ export function ExtensionContextProvider({ children }) {
         },
       };
 
+      let tempId = 0;
+      for (let item of field) {
+        item.tempId = tempId++;
+      }
+
       let state = {
         ...defaultExtensionState,
         field,
@@ -109,7 +114,8 @@ export function ExtensionContextProvider({ children }) {
         sdk,
         params,
         contentTypes: mapContentTypes(params.contentTypes),
-        rowColCast
+        rowColCast,
+        tempId
       };
 
       if (Array.isArray(params.cols)) {
@@ -145,7 +151,8 @@ export function ExtensionContextProvider({ children }) {
         const newItem = {
           position: Infinity,
           rows: rowColCast(1),
-          cols: rowColCast(1)
+          cols: rowColCast(1),
+          tempId: state.tempId++
         };
 
         // Generate a position for the new item.
@@ -235,9 +242,15 @@ export function ExtensionContextProvider({ children }) {
       state.setColVariant = (num) => {
         state.cols = state.params.cols[num];
 
+        const prevItem = state.field[state.selectedIndex];
+
         state.select = indexedSelector(num);
         state.set = indexedSetter(num, params.cols.length);
         state.field.sort((a, b) => state.select(a, 'position') - state.select(b, 'position'));
+
+        if (prevItem) {
+          state.selectedIndex = state.field.indexOf(prevItem);
+        }
 
         state = { ...state };
         setState(state);

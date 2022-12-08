@@ -287,7 +287,7 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
         onPointerUp={puResize}
         onPointerMove={pmResize}
       ></div>
-      <span style={{ transform: invTransform }}>{index}</span>
+      <span style={{ transform: invTransform }}>{item.tempId}</span>
     </div>
   );
 }
