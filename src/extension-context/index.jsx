@@ -87,6 +87,12 @@ export function ExtensionContextProvider({ children }) {
         params.paginated = false;
       }
 
+      if (!params.paginated) {
+        params.pageCount = 1;
+      }
+
+      const totalCount = params.pageSize * params.pageCount
+
       schema["ui:extension"].params.contentTypes = contentTypes;
 
       const rowColCast = (itemSchema.properties.rows.items?.type ?? itemSchema.properties.rows.type) === 'string' ? String : Number
@@ -181,7 +187,7 @@ export function ExtensionContextProvider({ children }) {
             newItem.cols[i] = rowColCast(1);
 
             if (i !== currentIndex) {
-              newItem.position[i] = findClosestUnreservedPosition(newItem.position[currentIndex], state.field, cols, indexedSelector(i), state.params.mode)
+              newItem.position[i] = findClosestUnreservedPosition(newItem.position[currentIndex], state.field, state.params.cols[i], totalCount, indexedSelector(i), state.params.mode)
             }
           }
         }

@@ -47,6 +47,7 @@ export function findClosestUnreservedPosition(
   position,
   items,
   cols,
+  totalCount,
   select,
   mode
 ) {
@@ -69,10 +70,16 @@ export function findClosestUnreservedPosition(
       case "wrap-simple": {
         const size = icols * rows;
         const position = select(item, 'position');
-    
-        for (let i = 0; i < size; i++) {
-          reserved.add(position + i);
+
+        if (mode === 'wrap-simple') {
+          reserved.add(position)
+          totalCount -= size - 1
+        } else {
+          for (let i = 0; i < size; i++) {
+            reserved.add(position + i);
+          }
         }
+
         break;
       }
       default:
@@ -81,9 +88,14 @@ export function findClosestUnreservedPosition(
   }
 
   let offset = 0;
+  debugger
   while (true) {
-    if (!reserved.has(position + offset)) {
-      return position + offset;
+    if (!reserved.has(position + offset) && (position + offset < totalCount || position - offset < 0)) {
+      if (position - offset < 0 && position > totalCount - position) {
+        return totalCount + (offset - position) - 1;
+      } else {
+        return position + offset;
+      }
     }
 
     if (position - offset >= 0) {
