@@ -148,13 +148,13 @@ This extension needs to be [registered](https://amplience.com/docs/development/r
 * Category: Content Field
 * Label: Grid _(this will appear as the tab title in the Dashboard)_
 * Name: grid _(needs to be unique with the Hub)_
-* URL: [https://dc-extension-grid.vercel.app/](https://dc-extension-grid.vercel.app/)
+* URL: [https://grid-extension.dc-demostore.com/](https://grid-extension.dc-demostore.com/)
 * Description: Grid Layout Extension _(can be left blank, if you wish)_
 
 Note:
 You can use our deployed version of this extension (builds from the "production" branch) -
 
-[https://dc-extension-grid.vercel.app/](https://dc-extension-grid.vercel.app/)
+[https://grid-extension.dc-demostore.com/](https://grid-extension.dc-demostore.com/)
 
 _As this is an open source project you're welcome to host your own "fork" of this project. You can use any standard static hosting service (Netlify, Amplify, Vercel, etc.) if you wish._
 
