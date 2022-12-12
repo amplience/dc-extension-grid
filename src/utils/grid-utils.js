@@ -88,16 +88,14 @@ export function findClosestUnreservedPosition(
   }
 
   let offset = 0;
-  while (true) {
-    if (!reserved.has(position + offset) && (position + offset < totalCount || position - offset < 0)) {
-      if (position - offset < 0 && position > totalCount - position) {
-        return totalCount + (offset - position) - 1;
-      } else {
+  while (position + offset < totalCount || position - offset >= 0) {
+    if (position + offset < totalCount) {
+      if (!reserved.has(position + offset)) {
         return position + offset;
       }
     }
 
-    if (position - offset >= 0) {
+    if (position - offset >= 0 && position - offset < totalCount) {
       if (!reserved.has(position - offset)) {
         return position - offset;
       }
@@ -105,6 +103,8 @@ export function findClosestUnreservedPosition(
 
     offset++;
   }
+
+  return -1;
 }
 
 // Item flow can vary depending on wrap mode:

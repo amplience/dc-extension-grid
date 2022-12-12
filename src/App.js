@@ -7,6 +7,7 @@ import Pagination from "./pagination";
 import Title from "./title";
 import React from "react";
 import ColsSelector from "./cols-selector";
+import Message from "./message";
 
 function App() {
   let [pageNum, setPageNum] = useState(0);
@@ -14,6 +15,7 @@ function App() {
   return (
     <>
       <ExtensionContextProvider>
+        <Message></Message>
         <Title></Title>
         <div className="app">
           <div className="app-grid">
