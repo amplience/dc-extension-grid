@@ -175,6 +175,14 @@ The grid extension manages an array of objects with the following properties:
 
 Any other properties in the object are exposed via the content field editor that appears when you select a content item.
 
+## Building and customisation
+
+This extension was built and tested on node v14.x
+
+To run the extension, please ensure your are on the correct node version and run:
+
+`npm install` / `npm i`
+
 ## Available Scripts
 
 In the project directory, you can run:
