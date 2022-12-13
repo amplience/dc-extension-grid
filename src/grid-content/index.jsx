@@ -208,7 +208,7 @@ export default function GridContent({ items, index, pageBase, pageSize, cols, on
         filter = valid ? "grayscale(0%)" : "grayscale(100%)";
 
         if (params.paginated) {
-          const switchDir = (newPos[0] < -1) ? -1 : ((newPos[0] > cols) ? 1 : 0);
+          const switchDir = (newPos[0] < -1 || mousePos[0] <= -34) ? -1 : ((newPos[0] > cols) ? 1 : 0);
 
           if (switchDir !== pageSwitchState.switchDir) {
             switch (switchDir) {
