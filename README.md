@@ -195,3 +195,8 @@ You can use this as the extension URL in DC to test local changes.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+## Useful Links
+ * [Contributing](./CONTRIBUTING.md)
+ * [Support](./support.md)
+ * [Licensing](./LICENSE)
