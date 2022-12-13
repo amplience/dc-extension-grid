@@ -31,7 +31,7 @@ It's possible to use more than one number of columns for a single grid layout, a
 
 First, provide `cols` in the extension parameters with an array of column numbers you want to create layouts for. Change all grid item properties to be an array of numbers (`rows`, `cols`, `position`). Each array item will represent the position and sizing of the item paired with the column number with the same array index. You should read these based on the number of columns you want on your render, so that you can use the unique layouts as the number of columns changes.
 
-[!Multi-Column Animation](./media/grid-multi-column-animation-small.gif)
+![Multi-Column Animation](https://raw.githubusercontent.com/amplience/dc-extension-grid/main/media/grid-multi-column-animation-small.gif)
 
 
 > Note: when multiple column layouts are used, the sorting order of grid items may be different between them. Make sure that your render is aware of this, and sorts based on the correct layout if necessary.
