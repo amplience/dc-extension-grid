@@ -180,7 +180,7 @@ Any other properties in the object are exposed via the content field editor that
 
 ## Building and customisation
 
-This extension was built and tested on node v14.x
+This extension was built and tested on node v16.x
 
 To run the extension, please ensure your are on the correct node version and run:
 
