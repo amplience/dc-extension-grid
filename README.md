@@ -1,5 +1,3 @@
-[![Amplience Dynamic Content](media/header.png)](https://amplience.com/dynamic-content)
-
 ![Dynamic Content Grid Extension](media/screenshot.png)
 
 # Dynamic Content Grid Extension
