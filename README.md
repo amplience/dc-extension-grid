@@ -92,7 +92,6 @@ First, provide `cols` in the extension parameters with an array of column number
     "items": {
         "type": "object",
         "properties": {
-            "type": "object",
             "position": {
                 "title": "Grid Position",
                 "description": "Grid item placement. Should not be a duplicate or overlap.",
